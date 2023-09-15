@@ -1,7 +1,7 @@
 from __future__ import print_function, absolute_import
 import os
 import glob
-import urllib
+# import urllib
 import tarfile
 import os.path as osp
 from scipy.io import loadmat
@@ -463,8 +463,8 @@ class iLIDSVID(object):
         fpath = osp.join(self.root, osp.basename(self.dataset_url))
 
         print("Downloading iLIDS-VID dataset")
-        url_opener = urllib.URLopener()
-        url_opener.retrieve(self.dataset_url, fpath)
+        # url_opener = urllib.URLopener()
+        # url_opener.retrieve(self.dataset_url, fpath)
 
         print("Extracting files")
         tar = tarfile.open(fpath)
