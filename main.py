@@ -29,8 +29,8 @@ from utils.video_loader import VideoDataset, VideoDatasetInfer
 
 parser = argparse.ArgumentParser(description='Train video model')
 # Datasets
-parser.add_argument('--root', type=str, default='D:\Files\CodeField\Datasets\iLIDS-VID')
-parser.add_argument('-d', '--dataset', type=str, default='ilidsvid',
+parser.add_argument('--root', type=str, default='D:\Files\CodeField\Datasets\LS-VID_V2\LS-VID')
+parser.add_argument('-d', '--dataset', type=str, default='lsvid',
                     choices=data_manager.get_names())
 parser.add_argument('-j', '--workers', default=4, type=int,
                     help="number of data loading workers (default: 4)")
@@ -81,6 +81,11 @@ parser.add_argument('--seq_len', type=int, default=4,
                     help="number of images to sample in a tracklet")
 parser.add_argument('--note', type=str, default='', help='additional description of this command')
 args = parser.parse_args()
+
+# 测试时参数设置
+args.evaluate = True
+args.all_frames = True
+args.resume = './SOTA_models/sinet_lsvid.pth.tar'
 
 def specific_params(args):
     if args.arch in ['sinet', 'sbnet']:

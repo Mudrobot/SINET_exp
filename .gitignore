@@ -1,3 +1,5 @@
 logs/
 *.ipynb
 .idea/
+__pycache__/
+SOTA_models/

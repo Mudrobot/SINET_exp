@@ -540,7 +540,7 @@ class iLIDSVID(object):
                         tracklets.append((img_names, pid, 0))
                     else:
                         for idx in range(num_sampling):
-                            if idx == num_sampling - 1:
+                            if idx == num_sampling - 1: # 如果是最后一个
                                 tracklets.append((img_names[-sampling_step:], pid,0))
                             else:
                                 tracklets.append((img_names[idx * sampling_step: (idx + 1) * sampling_step], pid, 0))
@@ -829,16 +829,19 @@ class LSVID(object):
             assert 1 <= camid <= 15
             if relabel: pid = pid2label[pid]
             camid -= 1  # index starts from 0
+            if sampling_step != 0:
+                num_sampling = len(img_paths) // sampling_step
+                if num_sampling == 0:
+                    tracklets.append((img_paths, pid, camid))
+                else:
+                    for idx in range(num_sampling):
+                        if idx == num_sampling - 1:
+                            tracklets.append((img_paths[idx * sampling_step:], pid, camid))
+                        else:
+                            tracklets.append((img_paths[idx * sampling_step: (idx + 1) * sampling_step], pid, camid))
 
-            num_sampling = len(img_paths) // sampling_step
-            if num_sampling == 0:
-                tracklets.append((img_paths, pid, camid))
             else:
-                for idx in range(num_sampling):
-                    if idx == num_sampling - 1:
-                        tracklets.append((img_paths[idx * sampling_step:], pid, camid))
-                    else:
-                        tracklets.append((img_paths[idx * sampling_step: (idx + 1) * sampling_step], pid, camid))
+                tracklets.append((img_paths, pid, camid))
             num_imgs_per_tracklet.append(len(img_paths))
 
         num_tracklets = len(tracklets)

@@ -118,7 +118,7 @@ class InfoNce(nn.Module):
         # (b//ni, t*ni, t*ni)
         cos = torch.matmul(features, features.transpose(-1, -2))
 
-        logits = torch.div(cos, self.temperature)
+        logits = torch.div(cos, self.temperature) # logits: (b//ni, t*ni, t*ni) (8,16,16)
         exp_neg_logits = (logits.exp() * (1-mask)).sum(dim=-1, keepdim=True)
 
         log_prob = logits - torch.log(exp_neg_logits + logits.exp())
