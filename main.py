@@ -159,6 +159,10 @@ def main():
 
     pin_memory = True if use_gpu else False
     # DataLoader Part
+    tmp = VideoDataset(
+            dataset_train,
+            spatial_transform=spatial_transform_train,
+            temporal_transform=temporal_transform_train)
     trainloader = DataLoader(
         VideoDataset(
             dataset_train,
