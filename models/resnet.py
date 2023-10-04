@@ -127,6 +127,7 @@ class _ResNet50(nn.Module):
         return nn.Sequential(*reslayers3d)
 
     def forward(self, x):
+        # x.shape is [32, 3, 4, 256, 128]
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
@@ -137,18 +138,18 @@ class _ResNet50(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
 
-        b, c, t, h, w = x.size()
+        b, c, t, h, w = x.size() # [32, 2048, 4, 16, 8]
         x = x.permute(0, 2, 1, 3, 4).contiguous()
-        x = x.view(b*t, c, h, w)
+        x = x.view(b*t, c, h, w) # [128, 2048, 16, 8]
         x = F.max_pool2d(x, x.size()[2:])
         x = x.view(b, t, -1)
-        x = x.transpose(1, 2)  # (b, c, t)
+        x = x.transpose(1, 2)  # (b, c, t) -> [32,2048,4]
 
         if not self.training:
             x = self.bn(x)
             return x
 
-        v = x.mean(-1) # x: 32*2048*4 v: 32*2048
+        v = x.mean(-1) # x: 32*2048*4 v: 32*2048 对时间维度求平均
         f = self.bn(v) # f: 32*2048
         y = self.classifier(f) # 32*150
 
@@ -156,11 +157,15 @@ class _ResNet50(nn.Module):
             x = self.bn(x)
             x = self.projection(x)
             return y, f, x
-
+        """
+        x: 32 x 2048 x 4
+        y: 32 x 150
+        f: 32 x 2048
+        """
         return y, f
 
 
-def ResNet50(num_classes, losses):
+def ResNet50(num_classes, losses, **kwargs):
     plugin_dict = {
         1: {},
         2: {},

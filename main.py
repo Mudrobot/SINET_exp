@@ -9,6 +9,7 @@ import numpy as np
 import os.path as osp
 from tqdm import tqdm
 
+import yaml
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -29,8 +30,11 @@ from utils.video_loader import VideoDataset, VideoDatasetInfer
 
 parser = argparse.ArgumentParser(description='Train video model')
 # Datasets
-parser.add_argument('--root', type=str, default='D:\Files\CodeField\Datasets\LS-VID_V2\LS-VID')
-parser.add_argument('-d', '--dataset', type=str, default='lsvid',
+# 读取 yaml 文件
+with open('config.yaml', 'r', encoding='utf-8') as f:
+   config = yaml.load(f, Loader=yaml.FullLoader)
+parser.add_argument('--root', type=str, default=config['data_dir'])
+parser.add_argument('-d', '--dataset', type=str, default=config['data_name'],
                     choices=data_manager.get_names())
 parser.add_argument('-j', '--workers', default=4, type=int,
                     help="number of data loading workers (default: 4)")
@@ -61,7 +65,7 @@ parser.add_argument('--distance', type=str, default='cosine', help="euclidean or
 parser.add_argument('--num_instances', type=int, default=4, help="number of instances per identity")
 parser.add_argument('--losses', default=['xent', 'htri'], nargs='+', type=str, help="losses")
 # Architecture
-parser.add_argument('-a', '--arch', type=str, default='sinet', help="c2resnet50, nonlocalresnet50")
+parser.add_argument('-a', '--arch', type=str, default=config['arch'], help="c2resnet50, nonlocalresnet50")
 # parser.add_argument('-a', '--arch', type=str, default='c2resnet50', help="c2resnet50, nonlocalresnet50")
 parser.add_argument('--pretrain', action='store_true', help="load params form pretrain model on kinetics")
 parser.add_argument('--pretrain_model_path', type=str, default='', metavar='PATH')
@@ -72,7 +76,7 @@ parser.add_argument('--evaluate', action='store_true', help="evaluation only")
 parser.add_argument('--eval_step', type=int, default=10,
                     help="run evaluation for every N epochs (set to -1 to test after training)")
 parser.add_argument('--start_eval', type=int, default=0, help="start to evaluate after specific epoch")
-parser.add_argument('--save_dir', '--sd', type=str, default='./logs')
+parser.add_argument('--save_dir', '--sd', type=str, default=f'{config["log_dir"]}/{config["data_name"]}_{config["arch"]}/')
 parser.add_argument('--use_cpu', action='store_true', help="use cpu")
 parser.add_argument('--gpu_devices', default='0', type=str, help='gpu device ids for CUDA_VISIBLE_DEVICES')
 
@@ -83,9 +87,10 @@ parser.add_argument('--note', type=str, default='', help='additional description
 args = parser.parse_args()
 
 # 测试时参数设置
-args.evaluate = True
-args.all_frames = True
-args.resume = './SOTA_models/sinet_lsvid.pth.tar'
+if config['evaluate']:
+    args.evaluate = True
+    args.all_frames = True
+    args.resume = config['evaluate_resume']
 
 def specific_params(args):
     if args.arch in ['sinet', 'sbnet']:

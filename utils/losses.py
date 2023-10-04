@@ -115,7 +115,7 @@ class InfoNce(nn.Module):
         mask_pos = (1 - torch.eye(t*ni)).cuda()
         mask_pos = (mask * mask_pos).unsqueeze(0)
 
-        # (b//ni, t*ni, t*ni)
+        # 计算余弦相似度
         cos = torch.matmul(features, features.transpose(-1, -2))
 
         logits = torch.div(cos, self.temperature) # logits: (b//ni, t*ni, t*ni) (8,16,16)

@@ -67,6 +67,18 @@ If you use our code in your research or wish to refer to the baseline results, p
       doi={10.1109/TCSVT.2021.3119983}
     }
 
+### `config.yaml`
+
+an example is below:
+```yaml
+data_dir: "/root/autodl-tmp/LS-VID"
+log_dir: "./logs"
+data_name: "lsvid" # mars / ilidsvid / prid / lsvid / duke
+arch: "resnet50" # resnet50 / sanet / sinet / idnet / sbnet
+evaluate: False
+evaluate_resume: './logs/best_model.pth.tar'
+```
+
 ### Acknowledgments
 
 This code is based on the implementations of [**AP3D**](https://github.com/guxinqian/AP3D).
