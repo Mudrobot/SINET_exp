@@ -7,6 +7,7 @@ __factory = {
     'sinet': SINet,
     'idnet': IDNet,
     'sbnet': SBNet,
+    'ctnet': CTNet,
 }
 
 def get_names():

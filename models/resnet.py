@@ -11,7 +11,7 @@ from models import inflate
 from models.statistic_attention_block import StatisticAttentionBlock
 from models.salient_to_broad_module import Salient2BroadModule
 from models.integration_distribution_module import IntegrationDistributionModule
-
+from models.CTAttention import CTAttention
 
 def weights_init_kaiming(m):
     classname = m.__class__.__name__
@@ -217,6 +217,17 @@ def SINet(num_classes, losses, seq_len, **kwargs):
         3: {1: partial(Salient2BroadModule, split_pos=0),
             3: partial(Salient2BroadModule, split_pos=1),
             5: partial(Salient2BroadModule, split_pos=2)},
+        4: {}
+    }
+    return _ResNet50(num_classes, losses, plugin_dict)
+
+
+def CTNet(num_classes, losses, seq_len, **kwargs):
+    plugin_dict = {
+        1: {},
+        2: {1: partial(CTAttention, t=seq_len),
+            3: partial(CTAttention, t=seq_len)},
+        3: {},
         4: {}
     }
     return _ResNet50(num_classes, losses, plugin_dict)

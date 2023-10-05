@@ -59,7 +59,7 @@ class IntegrationDistributionModule(nn.Module):
         :return:
         '''
         x1 = self.chl_reduction(x)
-        b, c, t, h, w = x1.size()
+        b, c, t, h, w = x1.size() # 32, 32, 4, 32, 16
 
         x1 = x1.reshape(b, c, -1, 1).transpose(1, 2)    # (b, t*h*w, c, 1)
         x2 = self.thw_reduction(x1)
