@@ -8,6 +8,7 @@ from torch.nn import init
 from torch.nn import functional as F
 
 from models import inflate
+from models.MyAttention import MyAttention
 from models.statistic_attention_block import StatisticAttentionBlock
 from models.salient_to_broad_module import Salient2BroadModule
 from models.integration_distribution_module import IntegrationDistributionModule
@@ -228,6 +229,17 @@ def CTNet(num_classes, losses, seq_len, **kwargs):
         2: {1: partial(CTAttention, t=seq_len),
             3: partial(CTAttention, t=seq_len)},
         3: {},
+        4: {}
+    }
+    return _ResNet50(num_classes, losses, plugin_dict)
+
+def MyNet(num_classes, losses, seq_len, **kwargs):
+    plugin_dict = {
+        1: {},
+        2: {},
+        3: {1: partial(MyAttention, t=seq_len),
+            3: partial(MyAttention, t=seq_len),
+            5: partial(MyAttention, t=seq_len)},
         4: {}
     }
     return _ResNet50(num_classes, losses, plugin_dict)
