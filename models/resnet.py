@@ -7,7 +7,7 @@ import torch.nn as nn
 from torch.nn import init
 from torch.nn import functional as F
 
-from models import inflate
+from models import inflate, STRF
 from models.MyAttention import MyAttention
 from models.statistic_attention_block import StatisticAttentionBlock
 from models.salient_to_broad_module import Salient2BroadModule
@@ -241,5 +241,19 @@ def MyNet(num_classes, losses, seq_len, **kwargs):
             3: partial(MyAttention, t=seq_len),
             5: partial(MyAttention, t=seq_len)},
         4: {}
+    }
+    return _ResNet50(num_classes, losses, plugin_dict)
+
+def STRF_ResNet503D(num_classes, losses, seq_len, **kwargs):
+    reso1 = 3; reso2 = 1
+    plugin_dict = {
+        1: {},
+        2: {
+            3: partial(STRF.STRF, reso1=reso1, reso2=reso2)
+        },
+        3: {
+            3: partial(STRF.STRF, reso1=reso1, reso2=reso2)
+        },
+        4: {},
     }
     return _ResNet50(num_classes, losses, plugin_dict)

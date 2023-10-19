@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 from .resnet import *
+from .APResNet import *
 __factory = {
     'resnet50': ResNet50,
     'sanet': SANet,
@@ -10,6 +11,8 @@ __factory = {
     ############# Self defined Net #############
     'ctnet': CTNet,
     'mynet': MyNet,
+    'ap3dresnet50': AP3DResNet50,
+    'ap3dnlresnet50': AP3DNLResNet50,
 }
 
 def get_names():
